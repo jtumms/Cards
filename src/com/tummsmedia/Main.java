@@ -136,8 +136,8 @@ public class Main {
 //                .filter(Main::isFlush)
 //                .filter(Main::isStraight)
 //                .filter(Main::isFourKind)
-//                .filter((Main::isStraightFlush)
-//                    .filter((Main::isThreeKind)
+//                .filter(Main::isStraightFlush)
+//                    .filter(Main::isThreeKind)
                 .filter(Main::isTwoPair)
                 .collect(Collectors.toCollection(HashSet::new));
         System.out.println(hands.size());

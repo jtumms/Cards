@@ -1,6 +1,6 @@
 package com.tummsmedia;
 
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -49,13 +49,106 @@ public class Main {
         return suits.size() == 1;
 
     }
+    public static boolean isFourKind(HashSet<Card> hand) {
+        HashSet<Card.Rank> ranks = new HashSet<>();
+        for (Card c : hand) {
+            ranks.add(c.rank);
+
+        }
+        return ranks.size() == 1;
+    }
+    public static boolean isStraight(HashSet<Card> hand) {
+        HashSet<Card.Rank> ranks = new HashSet<>();
+        ArrayList<Integer> rankOrdinalArray = new ArrayList<>();
+        for (Card c : hand) {
+            ranks.add(c.rank);
+            rankOrdinalArray.add(c.rank.ordinal());
+        }
+        Collections.sort(rankOrdinalArray);
+        int consecutive = 0;
+        ArrayList<Integer> aceHighStraightArray = new ArrayList<Integer> (Arrays.asList(10, 11, 12, 0));
+        for (int i = 1; i < ranks.size(); i++) {
+            boolean straight = false;
+            boolean aceHighStraight = false;
+            if (rankOrdinalArray.get(i) - rankOrdinalArray.get(i - 1) <= 1) {
+                consecutive++;
+                if (consecutive >= 3) {
+                    straight = true;
+                }
+            }
+            if (rankOrdinalArray.containsAll(aceHighStraightArray)) {
+                aceHighStraight = true;
+            }
+            if (straight || aceHighStraight) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isStraightFlush(HashSet<Card> hand) {
+        if (isFlush(hand) && isStraight(hand)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    public static boolean isThreeKind(HashSet<Card> hand) {
+        ArrayList<Card.Rank> ranks = new ArrayList<>();
+        for (Card c : hand) {
+            ranks.add(c.rank);
+        }
+        for (Card.Rank cr : ranks) {
+            int count = findDupes(ranks).get(cr);
+            if (count == 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isTwoPair(HashSet<Card> hand) {
+        ArrayList<Card.Rank> ranks = new ArrayList<>();
+        for (Card c : hand) {
+            ranks.add(c.rank);
+        }
+        for (Card.Rank cr : ranks) {
+            int count = findDupes(ranks).get(cr);
+            if (count == 2){
+                ArrayList<Card.Rank> ranks2 = (ArrayList<Card.Rank>) ranks.clone();
+                ranks2.remove(cr);
+                ranks = ranks2;
+                for (Card.Rank cr2 : ranks) {
+                    count = findDupes(ranks).get(cr2);
+                    if (count == 2){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         HashSet<Card> deck = createDeck();
         HashSet<HashSet<Card>> hands = createHand(deck);
         hands = hands.stream()
-                .filter(Main::isFlush)
+//                .filter(Main::isFlush)
+//                .filter(Main::isStraight)
+//                .filter(Main::isFourKind)
+//                .filter((Main::isStraightFlush)
+//                    .filter((Main::isThreeKind)
+                .filter(Main::isTwoPair)
                 .collect(Collectors.toCollection(HashSet::new));
         System.out.println(hands.size());
     }
+
+    public static HashMap<Card.Rank, Integer> findDupes(ArrayList<Card.Rank> ranks) {
+        HashMap<Card.Rank, Integer> m = new HashMap<>();
+        for(Card.Rank cr : ranks ) {
+            m.put(cr, Collections.frequency(ranks, cr));
+        }
+        return m;
+    }
+
 }

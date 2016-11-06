@@ -1,9 +1,11 @@
 package com.tummsmedia;
 
+import java.util.HashSet;
+
 /**
  * Created by john.tumminelli on 11/3/16.
  */
-public class Card {
+public class Card implements Comparable {
     enum Suit {
         CLUBS,
         DIAMONDS,
@@ -24,7 +26,9 @@ public class Card {
         TEN,
         JACK,
         QUEEN,
-        KING
+        KING;
+
+
     }
 
     Suit suit;
@@ -34,6 +38,8 @@ public class Card {
         this.suit = suit;
         this.rank = rank;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -52,5 +58,10 @@ public class Card {
         int result = suit.hashCode();
         result = 31 * result + rank.hashCode();
         return result;
+    }
+    @Override
+    public int compareTo(Object o){
+        Card c = (Card) o;
+        return this.rank.compareTo(c.rank);
     }
 }

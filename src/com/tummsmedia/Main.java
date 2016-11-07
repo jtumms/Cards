@@ -133,12 +133,12 @@ public class Main {
         HashSet<Card> deck = createDeck();
         HashSet<HashSet<Card>> hands = createHand(deck);
         hands = hands.stream()
-//                .filter(Main::isFlush)
+                .filter(Main::isFlush)
 //                .filter(Main::isStraight)
 //                .filter(Main::isFourKind)
 //                .filter(Main::isStraightFlush)
 //                    .filter(Main::isThreeKind)
-                .filter(Main::isTwoPair)
+//                .filter(Main::isTwoPair)
                 .collect(Collectors.toCollection(HashSet::new));
         System.out.println(hands.size());
     }
